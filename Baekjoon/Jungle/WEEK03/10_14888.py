@@ -1,5 +1,7 @@
 # 연산자 끼워넣기 https://www.acmicpc.net/problem/14888
 # 백트래킹, DFS
+# 참고 : https://zu-techlog.tistory.com/62
+# 참고(다른 방식) : https://hongcoding.tistory.com/119
  
 import sys 
 
