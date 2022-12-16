@@ -19,6 +19,7 @@ nums = list(map(int, sys.stdin.readline().split()))
 stack = []
 answers = [-1 for i in range(n)]
 
+# first 
 for i in range(n-1, -1, -1):
 
     while stack and nums[i] >= stack[-1]: # 오름차순으로 쌓여 있는 스택(top이 제일 작음)
@@ -29,5 +30,14 @@ for i in range(n-1, -1, -1):
     
     stack.append(nums[i])
 
+# second : using stack element as index
+stack.append(0)
+
+for i in range(1, n):
+    while stack and answers[stack[-1]] < answers[i]:
+        answers[stack.pop()] = answers[i]
+    stack.append(i)
 
 print(*answers, sep=" ")
+
+
