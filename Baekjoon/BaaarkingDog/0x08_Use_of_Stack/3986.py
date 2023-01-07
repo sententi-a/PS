@@ -16,4 +16,17 @@ for _ in range(int(sys.stdin.readline().rstrip())):
     if len(string) % 2 != 0:
         continue
     
-    
+    for char in string:
+        if not stack:
+            stack.append(char)
+        elif char == 'A' and stack[-1] == 'A':
+            stack.pop()
+        elif char == 'B' and stack[-1] == 'B':
+            stack.pop()
+        else:
+            stack.append(char)
+
+    if not stack:
+        count += 1
+
+print(count)
