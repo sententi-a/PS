@@ -13,10 +13,9 @@ from collections import deque
 
 hor, ver = map(int, sys.stdin.readline().split())
 
-days = 0
 tomato = [] # 토마토 정보 담은 리스트
-rotten = [] # 초기에 익은 토마토 좌표 저장하는 리스트
 queue = deque()
+result = 1
 
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
@@ -25,37 +24,30 @@ for i in range(ver):
     tomato.append(list(map(int, sys.stdin.readline().split())))
     for j in range (hor):
         if tomato[i][j] == 1:
-            rotten.append((i, j))
+            queue.append((i, j))
+            
 
-if len(rotten) == hor * ver:
+if len(queue) == hor * ver:
     print(0)
     exit()
 
-def bfs(a, b):
-    queue.append((a, b))
+while queue:
+    x, y = queue.popleft()
 
-    while queue:
-        x, y = queue.popleft()
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
 
-        for i in range(4):
-            nx, ny = x + dx[i], y + dy[i]
+        if 0 <= nx < ver and 0 <= ny < hor:
+            if tomato[nx][ny] == 0:
+                queue.append((nx, ny))
+                tomato[nx][ny] = tomato[x][y] + 1
 
-            if 0 <= nx < ver and 0 <= ny < hor:
-                if tomato[nx][ny] == 0:
-                    queue.append((nx, ny))
-                    tomato[nx][ny] = tomato[x][y] + 1
-
-a, b = rotten[0]
-print(rotten[0])
-bfs(a, b)
-
-for i in range(ver):
-    print(max(tomato[i]))
-    days = max(max(tomato[i]), days)
-    for j in range(hor):
-        if tomato[i][j] == 0:
+for i in tomato:
+    for tom in i:
+        if tom == 0:
             print(-1)
             exit()
+    result = max(max(i), result)
 
-print(tomato)
-print(days - 1)
+
+print(result-1)
