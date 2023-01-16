@@ -26,10 +26,10 @@ dy = [0, 0, -1, 1]
 
 col, row = map(int, sys.stdin.readline().split())
 
-count = 0 # 지훈이가 한 타임에 위치할 수 있는 좌표의 개수
 jihoon = deque()
 fire = deque()
-time = 0 # 탈출하는데 걸린 최소 시간 
+jh_visited = [[0 for _ in range(row)] for _ in range(col)]
+fire_visited = [[0 for _ in range(row)] for _ in range(col)]
 
 maze = []
 
@@ -38,55 +38,43 @@ for i in range(col):
     for j in range(row):
         if maze[i][j] == 'J':
             jihoon.append((i, j))
-            count += 1
         if maze[i][j] == 'F':
             fire.append((i, j))
 
+# --------------- 불 이동 ---------------- #
+while fire:
 
+    x, y = fire.popleft()
+
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+
+        if 0 <= nx < col and 0 <= ny < row:
+
+            if not fire_visited[nx][ny] and maze[nx][ny] != '#':
+                fire_visited[nx][ny] = fire_visited[x][y] + 1
+                fire.append((nx, ny))
+            
+# --------------- 지훈 이동 ---------------- #
 while jihoon:
-    
-    time += 1
 
-    # --------------- 지훈 이동 ---------------- #
-    jh_x, jh_y = jihoon.popleft()
-    maze[jh_x][jh_y] = '.'
-    count -= 1
+    x, y = jihoon.popleft()
     
     for i in range(4):
-        jh_nx, jh_ny = jh_x + dx[i], jh_y + dy[i]
+        nx, ny = x + dx[i], y + dy[i]
 
-        if 0 <= jh_nx < col and 0 <= jh_ny < row:
-            if maze[jh_nx][jh_ny] == '.':
-                # 지훈이가 미로의 가장자리에 접한 공간에 도달하면 탈출 
-                if jh_nx == 0 or jh_nx == col - 1 or jh_ny == 0 or jh_ny == row - 1:
-                    print(time)
-                    exit()
-                maze[jh_nx][jh_ny] = 'J'
-                count += 1
-                jihoon.append((jh_nx, jh_ny))
+        if 0 <= nx < col and 0 <= ny < row:
+
+            if not jh_visited[nx][ny] and maze[nx][ny] == '.':
+                # 불이 아직 방문하지 않았거나 
+                # 불이 퍼진 시간보다 지훈이가 이동한 시간이 더 빠르면, 이동할 수 있음
+                if not fire_visited[nx][ny] or fire_visited[nx][ny] > jh_visited[x][y] + 1:
+                    jh_visited[nx][ny] = jh_visited[x][y] + 1
+                    jihoon.append((nx, ny))
+
+        else:
+            print(jh_visited[x][y] + 1)
+            exit()
 
 
-    # --------------- 불 이동 ---------------- #
-    if fire:
-        fire_x, fire_y = fire.popleft()
-
-        for i in range(4):
-            fire_nx, fire_ny = fire_x + dx[i], fire_y + dy[i]
-            if 0 <= fire_nx < col and 0 <= fire_ny < row:
-        
-                # 불이 옮겨 붙을 위치
-                if maze[fire_nx][fire_ny] == '.' or maze[fire_nx][fire_ny] == 'J':
-                    maze[fire_nx][fire_ny] = 'F'
-                    fire.append((fire_nx, fire_ny))
-                    # 그 중 지훈이가 위치할 수 있는 곳이라면... 
-                    if maze[fire_nx][fire_ny] == 'J':
-                        count -= 1
-
-                # 지훈이가 불에 휩싸였다면  
-                if count <= 0:
-                    print("IMPOSSIBLE")
-                    exit()
-                
-    
-    # for l in maze:
-    #     print(*l)
+print("IMPOSSIBLE")
