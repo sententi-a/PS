@@ -25,6 +25,7 @@ total, curr, goal, up, down = map(int, sys.stdin.readline().split())
 queue = deque([curr]) # 강호가 이동할 곳을 담는 큐
 visited = [0 for _ in range(total + 1)] # 0은 padding, 1~total
 visited[curr] = 1
+dists = [up, -down]
 
 # 현재 강호가 있는 층과 가려고 하는 층이 같다면
 if curr == goal:
@@ -47,8 +48,25 @@ while queue:
     floor = queue.popleft()
     # 두 가지 경우를 경쟁 (큐에서 pop할 때마다 위로 올라가는 경우, 아래로 내려가는 경우 동시 비교)
     # 위로 올라가든, 아래로 내려가든 어차피 먼저 도달하면 그 때 출력 및 종료됨
-    move(floor, floor + up)
-    move(floor, floor - down)
+    """
+    Case 1: move 함수 사용 - 680ms (조금 더 빠름 40ms 정도)
+    """
+    # move(floor, floor + up)
+    # move(floor, floor - down)
+    
+    """
+    Case 2 : for loop으로 돌려서 while 문 내에서 체크 - 720ms
+    """
+    for dist in dists:
+        moving = floor + dist
+    
+        if moving == goal:
+            print(visited[floor])
+            exit()
+
+        if 1 <= moving <= total and visited[moving] == 0:
+            queue.append(moving)
+            visited[moving] = visited[floor] + 1
     
 
 print("use the stairs")
