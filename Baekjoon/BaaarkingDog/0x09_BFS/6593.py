@@ -38,24 +38,31 @@ while True:
                 if building[i][j][k] == 'S':
                     queue.append((i, j, k))
                     building[i][j][k] = 0
+                if building[i][j][k] == 'E':
+                    goal = (i, j, k)
         temp = sys.stdin.readline() # 각 층 사이의 빈 줄 담는 용도 
     
     while queue:
         x, y, z = queue.popleft()
+
+        if (x, y, z) == goal:
+            flag = True
+            print(f"Escaped in {building[x][y][z]} minute(s).")
+            break
         
         for i in range(6):
             nx, ny, nz = x + dx[i], y + dy[i], z + dz[i]
         
             if 0 <= nx < height and 0 <= ny < col and 0 <= nz < row:
-                if building[nx][ny][nz] == '.':
+                if building[nx][ny][nz] == '.' or building[nx][ny][nz] == 'E':
                     queue.append((nx, ny, nz))
                     building[nx][ny][nz] = building[x][y][z] + 1
                 
                 # 출구를 만났다면 
-                elif building[nx][ny][nz] == 'E':
-                    flag = True
-                    print(f"Escaped in {building[x][y][z] + 1} minute(s).")
-                    break
+                # elif building[nx][ny][nz] == 'E':
+                #     flag = True
+                #     print(f"Escaped in {building[x][y][z] + 1} minute(s).")
+                #     break
     
     if not flag:
         print("Trapped!")
