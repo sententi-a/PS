@@ -10,63 +10,45 @@ NxN 크기의 종이가 있고, 각 칸에는 -1, 0, 1 중 하나가 저장되�
 """
 
 import sys
-sys.setrecursionlimit(10**6)
 
 paper = [] 
 n = int(sys.stdin.readline())
-# recursion_flag = False
-
-count_ne = 0 # -1
-count_ze = 0 # 0
-count_po = 0 # 1
 
 for i in range(n):
     paper.append(list(map(int, sys.stdin.readline().split())))
 
+answer = {-1: 0, 0: 0, 1: 0}
+
 # 인자로 받아야 할 것 : x1, y1, x2, y2 (시작 좌표, 끝 좌표)
-def paper_cut(x1, y1, x2, y2):
-    global n, count_ne, count_ze, count_po
+def paper_cut(x, y, length):
     
-    number = paper[x1][y1] 
-
-    # Base Condition: 길이가 1인 경우
-    # if x2 - x1 == 1 or y2 - y1 == 1:
-        # if number == -1:
-        #     count_ne += 1
-        # elif number == 0:
-        #     count_ze += 1
-        # else:
-        #     count_po += 1
-        # return
+    number = paper[x][y] # 종이 시작점의 숫자
     
-
-    for i in range(x1, x2):
-        for j in range(y1, y2):
-            # 조건을 생각해보자
+    for i in range(x, x + length):
+        for j in range(y, y + length):
             if paper[i][j] != number:
-                # 0 - 9 : 0-3, 3-6 6-9
-                paper_cut(x1, y1, x2//3, y2//3)
-                paper_cut(x1, y2//3, x2//3, y2*2//3)
-                paper_cut(x1, y2*2//3, x2//3, y2)
+                div_len = length // 3
 
-                paper_cut(x2//3, y1, x2*2//3, y2//3)
-                paper_cut(x2//3, y2//3, x2*2//3, y2*2//3)
-                paper_cut(x2//3, y2*2//3, x2*2//3, y2)
+                paper_cut(x, y, div_len)
+                paper_cut(x, y+div_len, div_len)
+                paper_cut(x, y+(2*div_len), div_len)
 
-                paper_cut(x2*2//3, y1, x2, y2//3)
-                paper_cut(x2*2//3, y2//3, x2, y2*2//3)
-                paper_cut(x2*2//3, y2*2//3, x2, y2)
-                # return 
+                paper_cut(x+div_len, y, div_len)
+                paper_cut(x+div_len, y+div_len, div_len)
+                paper_cut(x+div_len, y+(2*div_len), div_len)
+
+                paper_cut(x+(2*div_len), y, div_len)
+                paper_cut(x+(2*div_len), y+div_len, div_len)
+                paper_cut(x+(2*div_len), y+(2*div_len), div_len)
+                return 
     
-    if number == -1:
-        count_ne += 1
+    # Base condition : 길이 1이거나 행렬 내 모든 원소가 같은 숫자
+    answer[number] += 1
+    return
 
-    elif number == 0:
-        count_ze += 1
-    else:
-        count_po += 1
-    return 
-            
+paper_cut(0, 0, n)
 
-paper_cut(0, 0, n, n)
-print(count_ne, count_ze, count_po, sep="\n")
+for a in answer:
+    print(answer[a])
+
+# dfs 재귀
