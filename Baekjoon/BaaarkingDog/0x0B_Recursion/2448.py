@@ -29,7 +29,6 @@ def star(x, y, n):
     """
     # Base condition
     if n == 3:
-        # 인자로 받은 x, y는 0, 0이라고 가정
         # 첫 번째 줄 
         answer[x][y+2] = '*'
         # 두 번째 줄
@@ -40,11 +39,15 @@ def star(x, y, n):
             answer[x+2][j] = '*'
         return
     
-    k = int(log(n//3, 2))
+    # k = int(log(n//3, 2))
 
-    star(x, y+3*(2**(k-1)), n//2)
-    star(x+3*(2**(k-1)), y, n//2)
-    star(x+3*(2**(k-1)), y+3*(2**k), n//2)
+    # star(x, y+3*(2**(k-1)), n//2)
+    # star(x+3*(2**(k-1)), y, n//2)
+    # star(x+3*(2**(k-1)), y+3*(2**k), n//2)
+
+    star(x, y+n//2, n//2)
+    star(x+n//2, y, n//2)
+    star(x+n//2, y+n, n//2)
 
     """
     n == 3 : 트리 1개 
@@ -84,4 +87,8 @@ def star(x, y, n):
 star(0, 0, case)
 
 for a in answer:
-    print(*a, sep="")
+    print("".join(a))
+    
+    # 아래는 Timeout
+    # print(*a, sep="") 
+
