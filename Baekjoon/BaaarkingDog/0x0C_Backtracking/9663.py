@@ -12,32 +12,44 @@ n = int(sys.stdin.readline())
 
 count = 0
 # queens[1]의 값 : 첫 번째 줄(row)에서의 퀸의 위치(col)
-queens = [0 for _ in range(n+1)] 
-visited = [False for _ in range(n+1)]
+queens = [None for _ in range(n)] 
+placed = [False for _ in range(n)] # 특정 col에 퀸을 놓았는지 여부
 
 """
 일단 첫 번째 줄에 놓으면, 두 번째 줄로 넘어가야 함 
 이후 윗줄 기준으로 +-1 / +1 / 0 이면 안 됨 
 """
 
-def sol(k):
+def pos_check(cur):
+    for j in range(cur):
+        if queens[cur] == queens[j] or abs(cur-j) == abs(queens[cur]-queens[j]):
+            return False
+    return True
+
+def sol(cur):
+    # cur : 현재 내가 퀸을 놓으려는 row
     global n, count
+
     # Base condition
-    if k == n:
-        print(queens)
+    if cur == n:
+        # print(queens)
         count += 1
         return
     
-    for i in range(1, n+1): # for index 
-        if not visited[i]: # 현재 인덱스에 놓여있지 않고
-            for j in range(1, n+1): # for value
-                if j not in queens:
-                    visited[i] = True
-                    queens[i] = j
-                    sol(k+1)
-                    visited[i] = False
-                    # queens[i] = 0
+    # 어떤 column에 놓을지 정함
+    for i in range(n):
+        if placed[i]:
+            continue
+
+        queens[cur] = i
+
+        # position check 
+        if pos_check(cur):
+            placed[i] = True
+            sol(cur+1)
+            placed[i] = False
+     
                 
 
-sol(1)
+sol(0)
 print(count)
