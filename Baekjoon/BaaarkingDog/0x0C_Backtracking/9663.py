@@ -48,8 +48,32 @@ def sol(cur):
             placed[i] = True
             sol(cur+1)
             placed[i] = False
-     
-                
 
-sol(0)
-print(count)
+
+count_2 = 0
+isused1 = [False for _ in range(n)]
+isused2 = [False for _ in range(2*n-1)]
+isused3 = [False for _ in range(2*n-1)]
+
+def sol_2(cur):
+    global count_2, n
+
+    if cur == n:
+        count_2 += 1
+        return
+
+
+    for i in range(n):
+        if isused1[i] or isused2[i+cur] or isused3[cur-i+n-1]:
+            continue
+        isused1[i] = True
+        isused2[i+cur] = True
+        isused3[cur-i+n-1] = True
+        sol_2(cur+1)
+        isused1[i] = False
+        isused2[i+cur] = False
+        isused3[cur-i+n-1] = False    
+      
+
+sol_2(0)
+print(count_2)
