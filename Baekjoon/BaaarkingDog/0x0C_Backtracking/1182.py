@@ -27,6 +27,17 @@ def sol(cur, total):
     # 현재 보고 있는 원소를 골랐을 때 
     sol(cur+1, total+sequence[cur])
 
+result = []
+def sol2(start):
+    global goal, n, count
+    
+    if sum(result) == goal and len(result) > 0:
+        count += 1
+
+    for i in range(start, n):
+        result.append(sequence[i])
+        sol2(i+1)
+        result.pop()
 
 sol(0, 0)
 if goal == 0:
