@@ -1,7 +1,8 @@
 // 그룹 단어 체커 https://www.acmicpc.net/problem/1316
 // 단어에 존재하는 모든 문자에 대해, 각 문자가 연속해서 나타나는 경우 카운트
 
-const path = process.platform === "linux" ? "/dev/stdin" : "Baekjoon/1316.txt";
+const path =
+  process.platform === "linux" ? "/dev/stdin" : `${__dirname}/1316.txt`;
 const fs = require("fs");
 const input = fs.readFileSync(path).toString().trim().split("\n");
 
