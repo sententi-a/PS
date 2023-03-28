@@ -5,7 +5,8 @@
 // 아니라면 이전 원소와 같은 rank를 넣음 -> 틀림 (weight 혹은 height가 같을 때 i-2, i-3 ... 계속 비교해야할수도)
 //
 
-const path = process.platform === "linux" ? "/dev/stdin" : "Baekjoon/7568.txt";
+const path =
+  process.platform === "linux" ? "/dev/stdin" : `${__dirname}/7568.txt`;
 const fs = require("fs");
 const input = fs.readFileSync(path).toString().trim().split("\n");
 
