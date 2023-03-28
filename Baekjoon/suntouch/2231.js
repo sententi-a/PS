@@ -1,6 +1,7 @@
 // 분해합 https://www.acmicpc.net/problem/2231
 
-const path = process.platform === "linux" ? "/dev/stdin" : "Baekjoon/2231.txt";
+const path =
+  process.platform === "linux" ? "/dev/stdin" : `${__dirname}/2231.txt`;
 const fs = require("fs");
 // const input = parseInt(fs.readFileSync(path).toString().trim());
 const input = fs.readFileSync(path).toString().trim();
