@@ -3,7 +3,8 @@
 // 목록에 있는 알파벳은 접미사가 = / - / j
 
 const fs = require("fs");
-const path = process.platform === "linux" ? "/dev/stdin" : "Baekjoon/2941.txt";
+const path =
+  process.platform === "linux" ? "/dev/stdin" : `${__dirname}/2941.txt`;
 const input = fs.readFileSync(path).toString().trim();
 
 const stack = input.split(""); // string to array
