@@ -35,11 +35,12 @@ left_higher_people = list(map(int, sys.stdin.readline().split()))
 #     if flag:
 #         print(*perm)
 #         exit()
-        
-o =[] 
 
-for i in left_higher_people[::-1]:
-    print(i)
-    o.insert(i, ppl_cnt)
+# 2nd 시도 : 뒤에서부터 시작해 input으로 받은 위치에 insert
+order = []
+
+for person in left_higher_people[::-1]:
+    order.insert(person, ppl_cnt)
     ppl_cnt -= 1
-    print(o)
+
+print(*order)
