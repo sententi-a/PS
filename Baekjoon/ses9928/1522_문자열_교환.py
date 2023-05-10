@@ -11,7 +11,6 @@ import sys
 string = sys.stdin.readline().rstrip()
 
 a_cnt = string.count('a')
-answer = 1000
 
 
 if a_cnt == len(string) or a_cnt == 0:
@@ -22,10 +21,11 @@ if a_cnt == len(string) or a_cnt == 0:
 # 그래서 a의 개수가 4라면 길이가 4로 된 영역을 만들고, 그 안에 있는 b를 모두 외부의 a와 교환하면 됨
 
 # 초기값
-b_cnt = string[:a_cnt].count('b')
+b_cnt = answer = string[:a_cnt].count('b')
 
-for i in range(len(string)):
+for i in range(len(string)-1):
     start, end = i, (i + a_cnt) % len(string)
+    print(start, end, b_cnt)
 
     if string[start] == 'b':
         b_cnt -= 1
