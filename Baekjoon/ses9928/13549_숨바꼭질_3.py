@@ -27,11 +27,12 @@ if sister <= subin:
 
 times = [INF for _ in range(max(subin, sister) + 2)]
 
+# 생각해보니, subin이 0이어도 뒤에서 DP 테이블을 채울 때 times[pos-1] + 1로 최솟값 갱신되므로 굳이 거칠 필요 없는 과정
 # 수빈이의 위치가 0일 때는 무조건 1에서 출발한다고 생각하고 1까지 가는 최소 시간 갱신 
-if subin == 0:
-    times[1] = 1
+# if subin == 0:
+#     times[1] = 1
 
-# 수빈보다 작은 위치에 있는 곳들 
+# 수빈보다 작거나 같은 위치에 있는 곳들 
 for pos in range(0, subin + 1):
     times[pos] = subin - pos
 
