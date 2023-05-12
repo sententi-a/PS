@@ -17,12 +17,21 @@ from math import ceil
 sys.setrecursionlimit(10**9)
 
 subin, sister = map(int, sys.stdin.readline().split())
-max_pos = ceil(sister / subin) * subin
+
+# 둘의 초반 위치가 같을 때
+if subin == sister:
+    print(0)
+    exit()
+
+if subin and sister: 
+    max_pos = ceil(sister / subin) * subin
+else:
+    max_pos = max(sister, subin) * 2
 
 visited = [False for _ in range(max_pos+1)]
 visited[subin] = True
-candidates = []
-stack = [(subin, 0)] # (pos, time_passed)
+min_time = 10 ** 5
+
 
 def check_pos(x, max_pos, sister):
     answer = []
@@ -39,20 +48,22 @@ def check_pos(x, max_pos, sister):
     
     if 0 < 2 * x <= max_pos:
         answer.append(2 * x)
-    
-    return answer
-        
-def dfs(curr, time, goal):
-    global max_pos
 
-    if candidates and min(candidates) < time:
+    answer.sort(reverse=True)
+    return answer
+
+
+def dfs(curr, time, goal):
+    global max_pos, min_time
+
+    if min_time <= time:
         return
     
     # 목표 지점에 도달했을 때
     if curr == goal:
-        candidates.append(time)
+        min_time = min(min_time, time)
         return
-    
+
     for pos in check_pos(curr, max_pos, goal):
         if not visited[pos]:
             if pos == 2 * curr:
@@ -66,6 +77,4 @@ def dfs(curr, time, goal):
 
 dfs(subin, 0, sister)
 
-
-# print(candidates)
-print(min(candidates))
+print(min_time)
