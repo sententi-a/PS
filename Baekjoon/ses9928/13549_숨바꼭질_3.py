@@ -12,69 +12,49 @@
 """
 
 import sys
-from math import ceil
-
-sys.setrecursionlimit(10**9)
 
 subin, sister = map(int, sys.stdin.readline().split())
 
-# 둘의 초반 위치가 같을 때
-if subin == sister:
-    print(0)
+# DP
+# 최솟값 찾기는 subin의 위치부터 시작하고, 이 위치보다 더 작은 곳들은 subin과의 거리가 최솟값임
+
+INF = 10 ** 6
+
+# 동생의 위치가 수빈보다 작을 때는 바로 출력 
+if sister <= subin:
+    print(subin - sister) 
     exit()
 
-if subin and sister: 
-    max_pos = ceil(sister / subin) * subin
-else:
-    max_pos = max(sister, subin) * 2
+times = [INF for _ in range(max(subin, sister) + 2)]
 
-visited = [False for _ in range(max_pos+1)]
-visited[subin] = True
-min_time = 10 ** 5
+# 수빈이의 위치가 0일 때는 무조건 1에서 출발한다고 생각하고 1까지 가는 최소 시간 갱신 
+if subin == 0:
+    times[1] = 1
 
+# 수빈보다 작은 위치에 있는 곳들 
+for pos in range(0, subin + 1):
+    times[pos] = subin - pos
 
-def check_pos(x, max_pos, sister):
-    answer = []
+# 아래 DP 테이블에 값 넣는 로직에서 다시 확인하므로 필요 없는 과정
+# 수빈이의 위치 기준 *2, *4, *8 ... 을 모두 0으로 만듦
+# if subin != 0:
+#     idx = subin
 
-    if 0 <= x - 1 <= max_pos:
-        answer.append(x-1)
+#     while idx <= sister:
+#         times[idx] = times[subin]
+#         idx *= 2
+
+for pos in range(subin + 1, sister + 1):
+    if pos % 2 == 0:
+        times[pos] = min(times[pos], times[pos-1] + 1, times[pos + 1] + 1, times[pos // 2])
+    else:
+        times[pos] = min(times[pos], times[pos-1] + 1, times[pos+1] + 1, times[(pos-1) // 2] + 1, times[(pos+1) // 2] + 1)
+
+    # 어차피 뒤에서 다시 확인하기 때문에 필요 없는 과정
+    # idx = pos
+
+    # while idx <= sister:
+    #     times[idx] = times[pos]
+    #     idx *= 2
     
-    # 현재 위치가 동생 위치보다 오른쪽이라면 왼쪽으로 가야 함
-    if x > sister:
-        return answer
-
-    if 0 <= x + 1 <= max_pos:
-        answer.append(x+1)
-    
-    if 0 < 2 * x <= max_pos:
-        answer.append(2 * x)
-
-    answer.sort(reverse=True)
-    return answer
-
-
-def dfs(curr, time, goal):
-    global max_pos, min_time
-
-    if min_time <= time:
-        return
-    
-    # 목표 지점에 도달했을 때
-    if curr == goal:
-        min_time = min(min_time, time)
-        return
-
-    for pos in check_pos(curr, max_pos, goal):
-        if not visited[pos]:
-            if pos == 2 * curr:
-                new_time = time
-            else:
-                new_time = time + 1
-
-            visited[pos] = True
-            dfs(pos, new_time, goal)
-            visited[pos] = False
-
-dfs(subin, 0, sister)
-
-print(min_time)
+print(times[sister])
