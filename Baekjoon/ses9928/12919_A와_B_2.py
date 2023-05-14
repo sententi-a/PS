@@ -74,3 +74,24 @@ print(1 if flag else 0)
 # BAA 같은 것들.. 이럴 때는 backtracking하면 되나?
 # 그런데 재귀를 쓰기는 싫음
 # backtracking을 반복문으로 바꾸려면? stack + copy를 사용해 원본에 손상이 가지 않게 
+
+# 3nd 방법 : 재귀 
+def dfs(examine):
+    # print(examine)
+    if start == examine:
+        print(1)
+        exit()
+
+    if len(examine) < len(start):
+        return 
+    
+    if examine[-1] == 'A':
+        dfs(examine[:-1])
+        # print('A 넘어옴')
+    
+    if examine[0] == 'B':
+        dfs(examine[1:][::-1])
+        # print('B 넘어옴')
+
+
+dfs(goal)
