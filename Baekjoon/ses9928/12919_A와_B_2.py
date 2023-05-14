@@ -59,7 +59,6 @@ while stack:
         if arr == start:
             flag = True
             break
-        continue
 
     if arr[-1] == 'A':
         new_arr = arr[:-1]
@@ -74,6 +73,4 @@ print(1 if flag else 0)
 # B를 없애야 할 때랑, A를 없애야 할 때가 있는데 둘의 조건에 모두 해당하는 경우의 수가 있음 
 # BAA 같은 것들.. 이럴 때는 backtracking하면 되나?
 # 그런데 재귀를 쓰기는 싫음
-
-# backtracking을 했어야 했어.. 근데 backtracking 없는 재귀로 되는 이유는 무엇일까? 
 # backtracking을 반복문으로 바꾸려면? stack + copy를 사용해 원본에 손상이 가지 않게 
