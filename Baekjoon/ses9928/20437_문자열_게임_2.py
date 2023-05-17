@@ -11,15 +11,7 @@
 import sys
 from collections import defaultdict, Counter
 
-for _ in range(int(sys.stdin.readline())):
-    string = sys.stdin.readline().rstrip() # 문자열 W 
-    limit = int(sys.stdin.readline()) # 정수 K 
-
-    # 정수 k가 1이거나, 문자열 w의 길이가 1이면 답은 무조건 1, 1
-    if limit == 1 or len(string) == 1:
-        print(1, 1)
-        continue
-
+def solution(string, limit):
     scs = 10**4 # 가장 짧은 연속 문자열 (이것도 가장 앞, 뒤 문자가 해당 문자일 때)
     lcs = 0 # 가장 긴 연속 문자열 
 
@@ -38,19 +30,28 @@ for _ in range(int(sys.stdin.readline())):
     # 만족하는 연속 문자열이 없을 때 (모든 문자의 개수가 k 이상이 아닐 때)
     if not candidates:
         print(-1)
-        continue
+        return
     
     # scs, lcs의 길이 갱신 (해당 문자가 딱 K번 포함되는 substring의 길이를 모두 구함)
     for char in candidates:
-        if counter[char] == limit:
-            length = indexes[char][-1] - indexes[char][0] + 1
-            scs = min(scs, length)
-            lcs = max(lcs, length)
-        else:
-            for i in range(counter[char] - limit + 1):
-                length = indexes[char][i + limit - 1] - indexes[char][i] + 1
-                scs = min(scs, length)
-                lcs = max(lcs, length)
+        for i in range(counter[char] - limit + 1):
+            length = indexes[char][i + limit - 1] - indexes[char][i] + 1
+            if scs > length:
+                scs = length
+            if lcs < length:
+                lcs = length
 
     print(scs, lcs)
-            
+    return
+
+if __name__ == '__main__':
+    for _ in range(int(sys.stdin.readline())):
+        string = sys.stdin.readline().rstrip() # 문자열 W 
+        limit = int(sys.stdin.readline()) # 정수 K 
+
+        # 정수 k가 1이거나, 문자열 w의 길이가 1이면 답은 무조건 1, 1
+        if limit == 1 or len(string) == 1:
+            print(1, 1)
+            continue
+
+        solution(string, limit)
