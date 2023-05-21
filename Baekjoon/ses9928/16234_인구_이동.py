@@ -15,8 +15,9 @@ r행 c열에 있는 나라에는 A[r][c]명이 삶
 """
 
 import sys
+sys.setrecursionlimit(10**6)
 
-n, l, r = map(int, sys.stdin.readline().split())
+n, minimum, maximum = map(int, sys.stdin.readline().split())
 ppl = []
 
 for _ in range(n):
@@ -26,4 +27,50 @@ for _ in range(n):
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-# dfs로 해야하나? 각 연합을 하나의 unit으로 생각
+days = 0 # 인구 이동이 발생하는 일수
+
+def dfs(x: int, y: int, stack: list):
+    global n, minimum, maximum
+
+    for i in range(4):
+        nx, ny = x + dx[i], y + dy[i]
+
+        # 아직 앞에서 방문하지 않았고, 나라 간 인구 차이가 L명 이상, R명 이하라면 연합을 맺음
+        if 0 <= nx < n and 0 <= ny < n:
+            if not checked[nx][ny] and minimum <= abs(ppl[x][y] - ppl[nx][ny]) <= maximum:
+                stack.append((nx, ny, ppl[nx][ny]))
+                checked[nx][ny] = True
+                dfs(nx, ny, stack)
+
+
+while True:
+    unions = []
+    checked = [[False for _ in range(n)] for _ in range(n)]
+
+    for i in range(n):
+        for j in range(n):
+            if not checked[i][j]:
+                stack = [(i, j, ppl[i][j])]
+                checked[i][j] = True
+                dfs(i, j, stack)
+                
+                if len(stack) > 1:
+                    unions.append(stack)
+
+    # 연합이 없다면 인구이동 발생하지 않음
+    if not unions:
+        break
+    
+    # 연합이 있다면 연합국들의 인구수를 통일
+    for union in unions:
+        population = [elem[2] for elem in union]
+        avg = sum(population) // len(union)
+
+        for country in union:
+            x, y, p = country
+            ppl[x][y] = avg
+
+    days += 1
+
+
+print(days)
