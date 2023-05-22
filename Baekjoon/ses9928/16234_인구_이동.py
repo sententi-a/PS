@@ -48,7 +48,7 @@ while True:
     checked = [[False for _ in range(n)] for _ in range(n)]
 
     for i in range(n):
-        for j in range(n):
+        for j in range(i%2, n, 2):
             if not checked[i][j]:
                 stack = [(i, j, ppl[i][j])]
                 checked[i][j] = True
