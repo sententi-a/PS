@@ -14,105 +14,113 @@
 
 import sys 
 
-def hor_continued(case: str):
-    print(case)
+def hor_continued(case: str, horse: str):
+    # print(case)
     for i in range(0, 9, 3):
-        flag = True
+        cnt = 0
 
-        for j in range(i+1, i+3):
-            if case[j-1] != case[j]:
-                flag = False
-                break
+        for j in range(i, i+3):
+            if case[j] == horse:
+                cnt += 1
+
+        if cnt == 3:
+            return True
         
-        if flag:
-            return flag
-        
-    return flag
+    return False
 
 
-def vert_continued(case: str):
+def vert_continued(case: str, horse: str):
     # 0 3 6 
     # 1 4 7
     # 2 5 8 
 
     for i in range(3):
-        flag = True
+        cnt = 0
 
-        for j in range(i+3, i+7, 3):
-            if case[j-3] != case[j]:
-                flag = False
-                break
+        for j in range(i, i+7, 3):
+            if case[j] == horse:
+                cnt += 1
 
-        if flag:
-            return flag
+        if cnt == 3:
+            return True
         
-    return flag
+    return False
 
-def diagonal_continued(case):
-    flag = True
+def diagonal_continued(case: str, horse: str):
+    # 0 4 8 / 2 4 6
+    cnt = 0
 
-    for i in range(1, 3):
-        if case[(i-1) * 4] != case[i*4]:
-            flag = False
-            break
-
-    if flag:
-        return flag
+    for i in range(3):
+        if case[i*4] == horse:
+            cnt += 1
     
-    flag = True
+    if cnt == 3:
+        return True
+    
+    cnt = 0
 
-    for i in range(2, 4):
-        if case[(i-1) * 2] != case[i * 2]:
-            flag = False
-            break
+    for i in range(1, 4):
+        if case[i*2] == horse:
+            cnt += 1
 
-    return flag
+    if cnt == 3:
+        return True
+    
+    return False
 
+def continue_check(case: str, horse: str):
+    if hor_continued(case, horse):
+        return True
+    
+    if vert_continued(case, horse):
+        return True
+    
+    if diagonal_continued(case, horse):
+        return True
+    
+    return False
 
 def is_valid(case: str):
     x_cnt = case.count('X')
     o_cnt = case.count('O')
+    empty_cnt = case.count('.')
 
-    # X가 O보다 작거나 같을 때 (X가 먼저 놓으므로 불가능)
-    if x_cnt <= o_cnt:
+    # X가 O보다 작을 때 (X가 먼저 놓으므로 불가능)
+    if x_cnt < o_cnt:
         return 'invalid'
     
     # X가 O보다 큰데 차이가 1이 아닐 경우 (번갈아 놓으므로 차이가 1이 돼야함)
-    elif x_cnt - o_cnt != 1:
+    if x_cnt > o_cnt and x_cnt - o_cnt > 1:
         return 'invalid'
 
-    # 가로 3칸 
-    if hor_continued(case):
+    #----X가 O보다 크거나 같을 때, 클 때는 차이가 1일 때----#
+    # X, O 둘 다 이길 수 없음
+    if continue_check(case, 'X') and continue_check(case, 'O'):
+        return 'invalid'
+    # X가 이기면 무조건 X가 O보다 많아야 함
+    elif continue_check(case, 'X') and x_cnt > o_cnt:
+        return 'valid'
+    # O가 이기면 무조건 X와 O가 같아야 함 
+    elif continue_check(case, 'O') and x_cnt == o_cnt:
         return 'valid'
     
-    # 세로 3칸
-    if vert_continued(case):
+    # 꽉 찼을 때, ** 이 때는 O가 이길 수 없음
+    if empty_cnt == 0 and not continue_check(case, 'O'):
         return 'valid'
-
-    # 대각선 3칸
-    # abs(x1-x2) == abs(y1-y2)
-    # 00 11 22 / 02 11 20
-    # 0 4 8 / 2 4 6
-    if diagonal_continued(case):
-        return 'valid'
-
 
     return 'invalid'
+
+
+if __name__ == '__main__':
+    answers = []
+
+    while True:
+        case = sys.stdin.readline().rstrip()
+
+        # end는 입력의 마지막   
+        if case == 'end':
+            break
+
+        answers.append(is_valid(case))
     
-answers = []
-
-while True:
-    case = sys.stdin.readline().rstrip()
-
-    # end는 입력의 마지막   
-    if case == 'end':
-        break
-
-    answers.append(is_valid(case))
-
-
-print(*answers, sep="\n")
-
-# .XX
-# X.X
-# OOO
+    print(*answers, sep="\n")
