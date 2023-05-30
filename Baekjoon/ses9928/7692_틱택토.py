@@ -104,8 +104,8 @@ def is_valid(case: str):
     elif continue_check(case, 'O') and x_cnt == o_cnt:
         return 'valid'
     
-    # 꽉 찼을 때, ** 이 때는 O가 이길 수 없음
-    if empty_cnt == 0 and not continue_check(case, 'O'):
+    # 꽉 찼는데 승패가 갈리지 않았을 때
+    if empty_cnt == 0 and not continue_check(case, 'X') and not continue_check(case, 'O'):
         return 'valid'
 
     return 'invalid'
