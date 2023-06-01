@@ -38,11 +38,6 @@ for i in range(spot_cnt):
             # 빌딩 개수를 셀 때 이미 동일한 높이에 대해 계산했으면 더이상 더하지 않음
             if skyline and y < skyline[-1][1]:
                 count_buildings(skyline, popped)
-                # if not popped[skyline[-1][1]]:
-                #     building_cnt += 1
-                #     popped[skyline[-1][1]] = True
-                #     # print(skyline, building_cnt)
-                # skyline.pop()
 
             # skyline 리스트에 원소가 없거나 이전 그림자와 높이가 크거나 같을 때 그냥 추가
             else:
@@ -55,10 +50,5 @@ if skyline:
 
     while skyline:
         count_buildings(skyline, popped)
-        # if not popped[skyline[-1][1]] and skyline[-1][1] != 0:
-        #     building_cnt += 1
-        #     popped[skyline[-1][1]] = True
-
-        # skyline.pop() 
             
 print(building_cnt)
