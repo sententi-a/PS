@@ -14,12 +14,12 @@ skyline = []
 building_cnt = 0
 
 
-def count_buildings(skyline: list, popped: list):
+def count_buildings(skyline: list, popped: set):
     global building_cnt
 
-    if not popped[skyline[-1][1]] and skyline[-1][1] != 0:
+    if not skyline[-1][1] in popped and skyline[-1][1] != 0:
         building_cnt += 1
-        popped[skyline[-1][1]] = True
+        popped.add(skyline[-1][1])
 
     skyline.pop()
 
@@ -31,7 +31,7 @@ for i in range(spot_cnt):
         skyline.append((x, y))
 
     if i > 0:
-       popped = [False for _ in range(skyline[-1][1] + 1)]
+       popped = set()
        
        while True:
             # 이전보다 높이가 낮으면 높이가 크거나 같은 이전 그림자를 찾을 때까지 pop
@@ -46,7 +46,7 @@ for i in range(spot_cnt):
 
 # skyline 리스트가 남아있다면 
 if skyline:
-    popped = [False for _ in range(skyline[-1][1] + 1)]
+    popped = set()
 
     while skyline:
         count_buildings(skyline, popped)
