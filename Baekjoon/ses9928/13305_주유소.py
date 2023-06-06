@@ -29,6 +29,8 @@ def oil(start: int, end: int, prices: list):
     
     # find minimum price in specific range
     # 마지막 도시에서는 주유를 할 필요가 없으므로 인덱스 end-1까지만 계산
+
+    # 여기에서 비효율이 발생하는 느낌
     min_price = min(prices[start:end])
     idx = prices[start:end].index(min_price)
 
@@ -36,5 +38,18 @@ def oil(start: int, end: int, prices: list):
     oil(start, idx, prices)
 
 
-oil(0, city_cnt, prices)
+# oil(0, city_cnt-1, prices)
+
+answer = 0
+min_cost = prices[0]
+
+for i in range(city_cnt-1):
+    if min_cost > prices[i]:
+        min_cost = prices[i]
+        
+    if prices[i] > min_cost:
+        prices[i] = min_cost
+    
+    answer += prices[i] * dists[i]
+
 print(answer)
