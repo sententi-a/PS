@@ -46,10 +46,7 @@ min_cost = prices[0]
 for i in range(city_cnt-1):
     if min_cost > prices[i]:
         min_cost = prices[i]
-        
-    if prices[i] > min_cost:
-        prices[i] = min_cost
     
-    answer += prices[i] * dists[i]
+    answer += min_cost * dists[i]
 
 print(answer)
