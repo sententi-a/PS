@@ -26,13 +26,9 @@ leds = {
 }
 
 # 한 자리 숫자 비교
-def get_digit_diff(a, b, digit=7):
-    cnt = 0
-    diff = bin(leds[a]^leds[b])[2:].zfill(digit)
-
-    for i in range(7):
-        if diff[i] == '1':
-            cnt += 1
+def get_digit_diff(a, b):
+    diff = bin(leds[a]^leds[b])[2:]
+    cnt = diff.count('1')
 
     return cnt
 
