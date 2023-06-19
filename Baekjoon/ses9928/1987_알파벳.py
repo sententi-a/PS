@@ -8,6 +8,7 @@
 """
 
 import sys 
+from collections import deque
 
 row, col = map(int, sys.stdin.readline().split())
 board = []
@@ -18,7 +19,6 @@ for _ in range(row):
 dx = [-1, 1, 0, 0]
 dy = [0, 0, -1, 1]
 
-answer = 0
 alphabets = [False for _ in range(ord('Z')-ord('A')+1)]
 alphabets[ord(board[0][0]) - ord('A')] = True
 
@@ -39,6 +39,29 @@ def dfs(x, y, count):
             alphabets[idx] = False
 
 
-dfs(0, 0, 1)
+# dfs(0, 0, 1)
+# print(answer)
 
-print(answer)
+def bfs():
+    global row, col
+
+    answer = 1
+    queue = set([(0, 0, board[0][0])])
+
+    while queue:
+        if answer >= 26:
+            break
+
+        x, y, visited = queue.pop()
+
+        for i in range(4):
+            nx, ny = x + dx[i], y + dy[i]
+            
+            if 0 <= nx < row and 0 <= ny < col and board[nx][ny] not in visited:
+                queue.add((nx, ny, visited + board[nx][ny]))
+                if answer < len(visited) + 1:
+                    answer = len(visited) + 1
+
+    return answer
+
+print(bfs())
