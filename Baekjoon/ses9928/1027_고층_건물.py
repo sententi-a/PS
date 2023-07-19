@@ -50,17 +50,12 @@ for target in range(building_cnt):
         if validation(end, target, buildings):
             cnt += 1
             first = end
-        else:
-            break
 
     for end in range(target + 1, building_cnt):
         if validation(target, end, buildings):
             cnt += 1
             last = end
-        else:
-            break
 
-    print(first, last, "target", target, "cnt", cnt)
     if max_cnt < cnt:
         max_cnt = cnt
 
