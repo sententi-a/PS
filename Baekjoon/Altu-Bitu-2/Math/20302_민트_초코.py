@@ -8,30 +8,63 @@
 
 import sys
 
-num_cnt = int(sys.stdin.readline())
-formula = list(sys.stdin.readline().rstrip().split())
+MAXNUM = 100000
 
-desert = ""
 
-# 정수/유리수를 판별할 수 있는 방법은?
-# 수식이 곱셈, 나눗셈으로만 이루어져 있으므로
-# 모든 곱셈을 합치고, 모든 나눗셈을 합쳐서 보고 마지막에 이 둘을 나눈 나머지가 0이면 정수
+def get_min_prime_num(n: int = MAXNUM):
+    """
+    인덱스에 해당하는 숫자의 최소 약수 (소수)를 저장하는 배열을 리턴하는 함수
+    """
+    min_prime_num = [i for i in range(n + 1)]
 
-multiply = int(formula[0])
-divide = 1
+    for i in range(2, int(n**0.5) + 1):
+        if min_prime_num[i] == i:
+            for j in range(i * 2, n + 1, i):
+                if min_prime_num[j] == j:
+                    min_prime_num[j] = i
 
-for i in range(1, (num_cnt - 1) * 2, 2):
-    operator = formula[i]
-    operand = int(formula[i + 1])
+    return min_prime_num
 
-    if operator == "*":
-        multiply *= operand
-    else:
-        divide *= operand
 
-if multiply % divide == 0:
-    desert = "mint chocolate"
-else:
-    desert = "toothpaste"
+def calculate(formula: list, min_prime_num: list):
+    """
+    수식과 숫자의 최소 약수를 담은 배열을 파라미터로 받아,
+    수식의 결과가 유리수인지 정수인지 판별하는 함수
+    """
+    answer = [0 for _ in range(MAXNUM + 1)]
+    min_prime_num = get_min_prime_num()
 
-print(desert)
+    for i in range(1, len(formula), 2):
+        operator = formula[i - 1]
+        operand = abs(int(formula[i]))
+
+        # 0을 곱하면 0이므로 정수
+        if operand == 0:
+            return "mint chocolate"
+
+        # 곱셈이면 약수의 거듭제곱 수를 + 1, 나눗셈이면 -1
+        if operator == "*":
+            flag = 1
+        else:
+            flag = -1
+
+        # 각 숫자 소인수분해하기
+        while operand > 1:
+            answer[min_prime_num[operand]] += flag
+            operand //= min_prime_num[operand]
+
+    for cnt in answer[2:]:
+        # 나누어 떨어지지 않으면
+        if cnt < 0:
+            return "toothpaste"
+
+    return "mint chocolate"
+
+
+if __name__ == "__main__":
+    num_cnt = int(sys.stdin.readline())
+    formula = ["*"] + list(sys.stdin.readline().rstrip().split())
+
+    desert = calculate(formula, get_min_prime_num())
+
+    print(desert)
