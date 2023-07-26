@@ -20,27 +20,24 @@ for _ in range(people_cnt):
 
 min_diff = 100 * 400
 
+
+def calc_score(team, player_cnt, scores):
+    score = 0
+
+    # 반복문을 돌면서 n//2C2에 해당하는 조합에 따른 능력치를 쭉 더해줌
+    for i in range(player_cnt - 1):
+        for j in range(i + 1, player_cnt):
+            score += scores[team[i]][team[j]] + scores[team[j]][team[i]]
+
+    return score
+
+
 for comb in combinations(people, people_cnt // 2):
     team_start = set(comb)
     team_link = set(people) - team_start
 
-    # index 사용을 위해 set -> list로 변경
-    team_start = list(team_start)
-    team_link = list(team_link)
-
-    score_start = 0
-    score_link = 0
-
-    # 반복문을 돌면서 n//2C2에 해당하는 조합에 따른 능력치를 쭉 더해줌
-    for i in range(people_cnt // 2 - 1):
-        for j in range(i + 1, people_cnt // 2):
-            score_start += (
-                scores[team_start[i]][team_start[j]]
-                + scores[team_start[j]][team_start[i]]
-            )
-            score_link += (
-                scores[team_link[i]][team_link[j]] + scores[team_link[j]][team_link[i]]
-            )
+    score_start = calc_score(list(team_start), people_cnt // 2, scores)
+    score_link = calc_score(list(team_link), people_cnt // 2, scores)
 
     if abs(score_start - score_link) < min_diff:
         min_diff = abs(score_start - score_link)
