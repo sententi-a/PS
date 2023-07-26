@@ -43,3 +43,19 @@ for comb in combinations(people, people_cnt // 2):
         min_diff = abs(score_start - score_link)
 
 print(min_diff)
+
+
+# zip을 사용해 해당 팀원이 포함된 모든 경우의 능력치 합을 구함
+def solution2(people_cnt: int, scores: list):
+    member_stat = [sum(i) + sum(j) for i, j in zip(scores, zip(*scores))]
+    total_stat = sum(member_stat) // 2
+
+    res = 1e9
+
+    for comb in combinations(member_stat, people_cnt // 2):
+        score = abs(total_stat - sum(comb))
+
+        if score < res:
+            res = score
+
+    return res
