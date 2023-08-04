@@ -39,5 +39,3 @@ while stack:
 
 
 print(cnt)
-
-print(2 * min(row, col) - 2 + (row > col))
